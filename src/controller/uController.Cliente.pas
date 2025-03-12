@@ -81,6 +81,9 @@ procedure TClienteController.ValidaCPF(CPF: string);
 begin
   if Length(CPF) <> 11 then
     raise Exception.Create('CPF inválido! Deve ter 11 dígitos.');
+
+  if FClienteDAO.BuscarPorCPF(CPF) <> nil then
+    raise Exception.Create('CPF já cadastrado no sistema!');
 end;
 
 end.

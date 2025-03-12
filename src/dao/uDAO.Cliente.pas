@@ -18,6 +18,7 @@ type
     function Deletar(Id: Integer): Boolean;
     function Listar(DataSource: TDataSource): Boolean;
     function BuscarPorId(Id: Integer): iCliente;
+    function BuscarPorCPF(CPF: String): iCliente;
   end;
 
 implementation
@@ -125,6 +126,27 @@ begin
   try
     FQuery.SQL('SELECT ID, NOME, CPF FROM CLIENTES WHERE ID = :ID');
     TFDQuery(FQuery.DataSet).ParamByName('ID').AsInteger := Id;
+    FQuery.DataSet.Open;
+
+    if not FQuery.DataSet.IsEmpty then
+    begin
+      Result := TModelCliente.New;
+      Result.ID(FQuery.DataSet.FieldByName('ID').AsInteger);
+      Result.Nome(FQuery.DataSet.FieldByName('NOME').AsString);
+      Result.CPF(FQuery.DataSet.FieldByName('CPF').AsString);
+    end;
+  except
+    on E: Exception do
+      raise Exception.Create('Erro ao buscar cliente: ' + E.Message);
+  end;
+end;
+
+function TClienteDAO.BuscarPorCPF(CPF: string): iCliente;
+begin
+  Result := nil;
+  try
+    FQuery.SQL('SELECT ID, NOME, CPF FROM CLIENTES WHERE CPF = :CPF');
+    TFDQuery(FQuery.DataSet).ParamByName('CPF').AsString := CPF;
     FQuery.DataSet.Open;
 
     if not FQuery.DataSet.IsEmpty then

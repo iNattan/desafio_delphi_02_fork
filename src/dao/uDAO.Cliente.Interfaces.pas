@@ -13,6 +13,7 @@ type
     function Deletar(Id: Integer): Boolean;
     function Listar(DataSource: TDataSource): Boolean;
     function BuscarPorId(Id: Integer): iCliente;
+    function BuscarPorCPF(CPF: String): iCliente;
   end;
 
 implementation
